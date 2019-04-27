@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend for social calendar application",
+  "main": "3000",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jaewan-Kim/social_calendar_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jaewan-Kim/social_calendar_backend/issues"
+  },
+  "homepage": "https://github.com/Jaewan-Kim/social_calendar_backend#readme",
+  "dependencies": {
+    "aws-sdk": "^2.442.0",
+    "dynamodb": "^1.2.0"
+  }
+}
