@@ -1,23 +1,22 @@
 const http = require('http')
 const port = 3000
 const account = require('./models/account.js')
+const express = require('express')
 
-var test_email = 'testing'
+var app = express()
+var test_email = 'tessdfting'
 var test_password = 'testing'
 
-const requestHandler = (request, response) => {
-  console.log(request.url)
-  account.signup();
-  account.login(test_email, test_password)
-  response.end('Backend for Social Calendar application')
-}
+app.get('/', function(req, res) {
+    res.send('server is running')
+})
 
-const server = http.createServer(requestHandler)
+app.get('/login/:email/:password', function(req, res){
+    console.log(req.params)
+    account.login(req.params.email, req.params.password)
+    res.send(res)
+})
 
-server.listen(port, (err) => {
-  if (err) {
-    return console.log('something bad happened', err)
-  }
+var server = app.listen(3000, function() {
 
-  console.log(`server is listening on ${port}`)
 })
