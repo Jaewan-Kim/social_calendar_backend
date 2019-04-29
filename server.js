@@ -10,8 +10,9 @@ app.get('/', function(req, res) {
 })
 
 app.get('/login/:email/:password', function(req, res){
+    
     var returnObject = new Object()
-
+    returnObject.successful = false
     account.login(req.params.email, req.params.password, returnObject, function() {
         console.log(returnObject)
         res.send(returnObject)
@@ -19,9 +20,12 @@ app.get('/login/:email/:password', function(req, res){
 
 })
 
-app.get('/signup', function(req, res) {
-    account.signup(1, 1)
-    console.log(2)
+app.get('/signup/:email/:password/:name', function(req, res) {
+
+    var returnObject = new Object()
+    account.signup(req.params.email, req.params.password, req.params.name, returnObject, function() {
+        res.send(returnObject)
+    })
 })
 
 var server = app.listen(3000, function() {

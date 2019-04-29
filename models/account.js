@@ -16,7 +16,7 @@ function isEmpty(obj) {
 }
 
 module.exports = {
-  async login(email_input, password_input, returnObject, callback) {
+  login(email_input, password_input, returnObject, callback) {
     var params = {
       TableName: "Account",
       Key: {
@@ -24,7 +24,7 @@ module.exports = {
       }
     };
 
-    await documentClient.get(params, function(err, data) {
+    documentClient.get(params, function(err, data) {
       if (err) {
         console.log(
           `Error occurred during login() with email ${email_input}. `,
@@ -55,8 +55,57 @@ module.exports = {
     });
 
   },
-  signup(new_email, new_password) {
+  signup(new_email, new_password, new_name, returnObject, callback) {
       
+    var params = {
+      TableName: 'Account',
+      Item: {
+        email: new_email,
+        password: new_password,
+        name: new_name
+      }
+    }
+
+    var params_for_duplicate = {
+      TableName: "Account",
+      Key: {
+        email: new_email
+      }
+    };
+
+    documentClient.get(params_for_duplicate, function(err, data) {
+      if (err) {
+        returnObject.successful = false
+        returnObject.duplicate = false
+        returnObject.message = 'Error: ' + err
+        callback()
+
+      } else {
+        if (isEmpty(data)) {
+          documentClient.put(params, function(err, data) {
+            if (err) {
+              returnObject.successful = false
+              returnObject.duplicate = false
+              returnObject.message = 'Error: ' + err
+              callback()
+
+            } else {
+              returnObject.duplicate = false
+              returnObject.successful = true
+              returnObject.message = 'Successfully created a new account'
+              callback()
+            }
+          })
+        } else {
+          returnObject.duplicate = true
+          returnObject.successful = false
+          returnObject.message = 'This email already exists'  
+          callback()
+        }
+      }
+      
+    })
+
   }
 
 };
