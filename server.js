@@ -35,6 +35,14 @@ app.get('/signup/:email/:password/:name', function(req, res) {
     })
 })
 
+app.get('/settings/:email/:password/:newPassword', function(req, res) {
+
+    var returnObject = new Object()
+    account.updatePassword(req.params.email, sha1(req.params.password), sha1(req.params.newPassword), returnObject, function() {
+        res.send(returnObject)
+    })
+})
+
 var server = app.listen(3000, function() {
 
 })

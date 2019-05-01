@@ -106,6 +106,44 @@ module.exports = {
       
     })
 
+  },
+  updatePassword(username, password, newPassword, returnObject, callback) {
+
+    var returnObjectTemp = new Object()
+
+    this.login(username, password, returnObjectTemp, function() {
+      
+      if (returnObjectTemp.message === wrongPasswordMessage) {
+        returnObject.successful = false
+        callback()
+      } else if (returnObjectTemp.message === loginSuccessMessage) {
+
+        var params = {
+          TableName: 'Account',
+          Key: {
+            'email' : username
+          },
+          UpdateExpression: 'set password = :p',
+          ExpressionAttributeValues: {
+            ':p' : newPassword
+          }
+        }
+
+        documentClient.update(params, function(err, data) {
+          if (err) {
+            returnObject.successful = false
+            console.log("Error in updatePassword() ", err)
+            callback()
+          } else {
+            returnObject.successful = true
+            callback()
+          }
+        })
+
+      }
+
+
+    })
   }
 
 };
