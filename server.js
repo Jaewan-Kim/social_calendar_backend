@@ -2,6 +2,7 @@ const http = require('http')
 const port = 3000
 const account = require('./models/account.js')
 const express = require('express')
+const event = require('./models/event.js')
 var sha1 = require('sha1')
 
 var app = express()
@@ -41,6 +42,14 @@ app.get('/settings/:email/:password/:newPassword', function(req, res) {
     account.updatePassword(req.params.email, sha1(req.params.password), sha1(req.params.newPassword), returnObject, function() {
         res.send(returnObject)
     })
+})
+
+app.get('/createevent/:eventname/:username/:dates/:location', function(req, res) {
+    var returnObject = new Object()
+    event.createEvent(req.params.eventname, req.params.username, req.params.dates, req.params.location, returnObject, function() {
+        res.send(returnObject)
+    })
+    
 })
 
 var server = app.listen(3000, function() {
