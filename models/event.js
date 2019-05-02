@@ -12,7 +12,7 @@ function isEmpty(obj) {
 }
 
 module.exports = {
-    createEvent(input_event_name, input_admin_username, input_dates, input_location, returnObject, callback) {
+    createEvent(input_event_name, input_admin_username, input_dates, input_location, input_description, returnObject, callback) {
         
         var eventid = sha1(input_admin_username + input_event_name + input_dates)
         var params = {
@@ -22,7 +22,8 @@ module.exports = {
                event_name: input_event_name,
                event_location: input_location,
                event_dates: input_dates,
-               event_admin: input_admin_username
+               event_admin: input_admin_username,
+               event_description: input_description
            } 
         }
 
