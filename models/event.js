@@ -83,32 +83,35 @@ module.exports = {
         callback();
       }
 
-      if (isEmpty(data.Item.events)) {
+
+      if (typeof data.Item.events === 'undefined') {
         returnObject.message = "no events found";
         callback();
-      }
-
-      returnObject.events = []
-      var promises = []
-      for (let i = 0; i < data.Item.events.length; i++) {
-
-        var event_params = {
-            TableName: "Event",
-            Key: {
-                event_id: data.Item.events[i]
-            }
+      } else {
+        returnObject.events = []
+        var promises = []
+        for (let i = 0; i < data.Item.events.length; i++) {
+  
+          var event_params = {
+              TableName: "Event",
+              Key: {
+                  event_id: data.Item.events[i]
+              }
+          }
+          documentClient.get(event_params, function(err, event_data) {
+              if (typeof event_data.Item.event_time === 'undefined') {
+                  event_data.Item.event_time = 'Time not chosen'
+              }
+              returnObject.events.push(event_data.Item)
+              if (returnObject.events.length === data.Item.events.length) {
+                  callback()
+              }
+              
+          })
         }
-        documentClient.get(event_params, function(err, event_data) {
-            if (typeof event_data.Item.event_time === 'undefined') {
-                event_data.Item.event_time = 'Time not chosen'
-            }
-            returnObject.events.push(event_data.Item)
-            if (returnObject.events.length === data.Item.events.length) {
-                callback()
-            }
-            
-        })
       }
+
+      
     });
   }
 };
