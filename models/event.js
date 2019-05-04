@@ -99,6 +99,9 @@ module.exports = {
             }
         }
         documentClient.get(event_params, function(err, event_data) {
+            if (typeof event_data.Item.event_time === 'undefined') {
+                event_data.Item.event_time = 'Time not chosen'
+            }
             returnObject.events.push(event_data.Item)
             if (returnObject.events.length === data.Item.events.length) {
                 callback()
