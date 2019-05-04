@@ -52,6 +52,14 @@ app.get('/createevent/:eventname/:username/:dates/:location/:description', funct
     
 })
 
+app.get('/loadevents/:username', function(req, res) {
+    var returnObject = new Object()
+    event.loadEvents(req.params.username, returnObject, function() {
+        console.log(returnObject)
+        res.send(returnObject)
+    })
+})
+
 var server = app.listen(3000, function() {
 
 })
