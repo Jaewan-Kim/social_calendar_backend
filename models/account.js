@@ -144,6 +144,68 @@ module.exports = {
 
 
     })
+  },
+  updateSchedule(username, schedule, returnObject, callback) {
+
+    schedule = schedule.split(',')
+    var scheduleStr = ''
+    console.log(schedule)
+    for (var i = 0; i < 91; i++) {
+      if (schedule[i] === 'true') {
+        scheduleStr += '1'
+
+        if (i == 90) {
+          var params = {
+            TableName: 'Account',
+            Key: {
+              'email' : username
+            },
+            UpdateExpression: 'set schedule = :s',
+            ExpressionAttributeValues: {
+              ':s' : scheduleStr
+            }
+          }
+  
+          documentClient.update(params, function(err, data) {
+            if (err) {
+              returnObject.successful = false
+              console.log("Error in updateSchedule() ", err)
+              callback()
+            } else {
+              returnObject.successful = true
+              callback()
+            }
+          })
+        }
+      } else {
+        scheduleStr += '0'
+        if (i == 90) {
+          var params = {
+            TableName: 'Account',
+            Key: {
+              'email' : username
+            },
+            UpdateExpression: 'set schedule = :s',
+            ExpressionAttributeValues: {
+              ':s' : scheduleStr
+            }
+          }
+  
+          documentClient.update(params, function(err, data) {
+            if (err) {
+              returnObject.successful = false
+              console.log("Error in updateSchedule() ", err)
+              callback()
+            } else {
+              returnObject.successful = true
+              callback()
+            }
+          })
+        }
+      
+      }
+    }
+
   }
 
 };

@@ -60,6 +60,12 @@ app.get('/loadevents/:username', function(req, res) {
     })
 })
 
+app.get('/updateschedule/:username/:schedule', function(req, res) {
+    var returnObject = new Object()
+    account.updateSchedule(req.params.username, req.params.schedule, returnObject, function() {
+        res.send(returnObject)
+    })
+})
 var server = app.listen(3000, function() {
 
 })
