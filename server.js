@@ -44,11 +44,15 @@ app.get('/settings/:email/:password/:newPassword', function(req, res) {
     })
 })
 
-app.get('/createevent/:eventname/:username/:dates/:location/:description', function(req, res) {
+app.get('/createevent/:eventname/:username/:dates/:location/:description/:users', function(req, res) {
     var returnObject = new Object()
-    event.createEvent(req.params.eventname, req.params.username, req.params.dates, req.params.location, req.params.description, returnObject, function() {
+    try {
+        event.createEvent(req.params.eventname, req.params.username, req.params.dates, req.params.location, req.params.description, req.params.users, returnObject, function() {
+            res.send(returnObject)
+        })
+    } catch (err) {
         res.send(returnObject)
-    })
+    }
     
 })
 
