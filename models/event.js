@@ -63,40 +63,19 @@ module.exports = {
             ":empty_list": []
           }
         };
-        var check_params = {
-          TableName: "Account",
-          Key: {
-            email: users[i]
-          }
-        };
+        documentClient.update(update_params, function(err, data) {
+          if (err) {
+            if (i == users.length) {
+              returnObject.successful = false;
 
-        try {
-          documentClient.get(check_params, function(err, data) {
-            if (err) {
-              if (i == users.length) {
-                returnObject.successful = false;
-
-                callback();
-              }
-            } else {
-              documentClient.update(update_params, function(err, data) {
-                if (err) {
-                  if (i == users.length) {
-                    returnObject.successful = false;
-
-                    callback();
-                  }
-                } else {
-                  if (i == users.length) {
-                    callback();
-                  }
-                }
-              });
+              callback();
             }
-          });
-        } catch (err) {
-          console.log("caught it")
-        }
+          } else {
+            if (i == users.length) {
+              callback();
+            }
+          }
+        });
       }
     });
   },
