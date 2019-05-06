@@ -68,6 +68,16 @@ app.get('/updateschedule/:username/:schedule', function(req, res) {
         res.send(returnObject)
     })
 })
+
+app.get('/geteventschedule/:event_id', function(req, res) {
+    var returnObject = new Object()
+    event.chooseTime(req.params.event_id, returnObject, function() {
+        event.addSchedules(returnObject.schedules, returnObject, function() {
+            res.send(returnObject)
+        })
+    })
+})
+
 var server = app.listen(3000, function() {
 
 })
