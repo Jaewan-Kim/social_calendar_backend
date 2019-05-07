@@ -107,7 +107,6 @@ module.exports = {
         return;
       } else {
         returnObject.events = [];
-        var promises = [];
         for (let i = 0; i < data.Item.events.length; i++) {
           var event_params = {
             TableName: "Event",
@@ -216,5 +215,71 @@ module.exports = {
         }
       }
     }
+  },
+  addUsers(event_id, users, returnObject, callback) {
+
+    var usersArray = users.split(',')
+    var params = {
+      TableName: "Event",
+      Key: {
+        event_id: event_id
+      },
+      UpdateExpression:
+        "set #event_users = list_append(if_not_exists(#event_users, :empty_list), :users)",
+      ExpressionAttributeNames: {
+        "#event_users": "event_users"
+      },
+      ExpressionAttributeValues: {
+        ":users": usersArray,
+        ":empty_list": []
+      }
+    }
+
+    documentClient.update(params, function(err, data) {
+      if (err) {
+        returnObject.successful = false
+        callback()
+      } else {
+        var completed = 0
+        for (var i = 0; i < usersArray.length; i++) {
+          completed += 1
+          var user_params = {
+            TableName: 'Account',
+            Key: {
+              email: usersArray[i]
+            }, 
+            UpdateExpression:
+              "set #events = list_append(if_not_exists(#events, :empty_list), :event)",
+            ExpressionAttributeNames: {
+              "#events": "events"
+            },
+            ExpressionAttributeValues: {
+              ":event": [event_id],
+              ":empty_list": []
+            }
+          }
+
+          documentClient.update(user_params, function(err1, data) {
+            if (completed == usersArray.length) {
+              returnObject.successful = true
+              callback()
+            }
+          })
+        }
+      }
+    })
+  },
+  loadEvent(event_id, returnObject, callback) {
+    var params = {
+      TableName: "Event",
+      Key: {
+        event_id: event_id
+      }
+    }
+
+    documentClient.get(params, function(err, data) {
+      returnObject.data = data.Item
+      callback()
+    })
   }
 };

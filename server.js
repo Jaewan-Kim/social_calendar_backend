@@ -78,6 +78,20 @@ app.get('/geteventschedule/:event_id', function(req, res) {
     })
 })
 
+app.get('/addUsers/:event_id/:users', function(req, res) {
+    var returnObject = new Object()
+    event.addUsers(req.params.event_id, req.params.users, returnObject, function() {
+        res.send(returnObject)
+    })
+})
+
+app.get('/loadEvent/:event_id', function(req, res) {
+    var returnObject = new Object()
+    event.loadEvent(req.params.event_id, returnObject, function() {
+        res.send(returnObject)
+    })
+})
+
 var server = app.listen(3000, function() {
 
 })
