@@ -92,6 +92,13 @@ app.get('/loadEvent/:event_id', function(req, res) {
     })
 })
 
+app.get('/finalizetime/:event_id/:time', function(req, res) {
+    var returnObject = new Object()
+    event.finalizeTime(req.params.event_id, req.params.time, returnObject, function() {
+        res.send(returnObject)
+    })
+})
+
 var server = app.listen(3000, function() {
 
 })

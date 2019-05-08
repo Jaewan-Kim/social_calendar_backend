@@ -25,7 +25,7 @@ module.exports = {
     var eventid = sha1(input_admin_username + input_event_name + input_dates);
     var users = input_users.split(",");
     
-    var dates = input_dates.substring(1, input_dates.length).split(",")
+    var dates = input_dates.split(",")
     users.push(input_admin_username);
     console.log(users);
     var params = {
@@ -37,7 +37,8 @@ module.exports = {
         event_dates: dates,
         event_admin: input_admin_username,
         event_description: input_description,
-        event_users: users
+        event_users: users,
+        event_time: 'Time not chosen'
       }
     };
     returnObject.successful = true;
@@ -279,6 +280,24 @@ module.exports = {
 
     documentClient.get(params, function(err, data) {
       returnObject.data = data.Item
+      callback()
+    })
+  },
+  finalizeTime(event_id, time, returnObject, callback) {
+    var params = {
+      TableName: 'Event',
+      Key: {
+        'event_id' : event_id
+      },
+      UpdateExpression: 'set event_time = :e',
+      ExpressionAttributeValues: {
+        ':e' : time
+      }
+    }
+    console.log(event_id)
+    console.log(time)
+    documentClient.update(params, function(err, data) {
+      returnObject.successful = true
       callback()
     })
   }
